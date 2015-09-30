@@ -107,3 +107,17 @@ def clasf_valid_knn(X, Y, TX, TY, alpha):
             count_ok += 1
 
     return float(count_ok)/len(TX), csf
+
+
+def eletion_ovo(list_clsf, X, size):
+    mat = [[0 for i in range(size)] for i in range(size)]
+    res = []
+
+    for it, tx, clf in list_clsf:
+        mat[it[0]][it[1]] = clf.prob(X)[0]
+        mat[it[1]][it[0]] = clf.prob(X)[1]
+
+    for it in mat:
+        res.append(sum(it)/(len(it)-1))
+
+    return max(res)

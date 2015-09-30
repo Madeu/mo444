@@ -1,9 +1,10 @@
+from cProfile import label
 import csv, pickle
 from datetime import datetime
-import numpy as np
+#import numpy as np
 
 
-def read_data(file):
+def read_data(file, lim):
     count = 0
     list_crimes = []
     words_crimes = {}
@@ -44,7 +45,26 @@ def read_data(file):
             if row[5] != 'NONE':
                 solutions_crimes += 1
 
+            if count == lim:
+                break
+
     return list_crimes, words_crimes, days, dict_dp, solutions_crimes
+
+
+def get_all_timestmp(file, lim):
+    count = 0
+    timestmp = []
+
+    with open(file, 'rb') as f:
+        reader = csv.reader(f, delimiter=',', quotechar='"')
+        header = reader.next()
+        for row in reader:
+            timestmp.append(datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S'))
+            count += 1
+            if count == lim:
+                break
+
+    return timestmp
 
 
 def load_dumpy(name):
@@ -113,7 +133,7 @@ def construct_data(lim):
 
 
 if __name__ == "__main__":
-    x = construct_data(700000)
+    timstmp = get_all_timestmp("../2015s2-mo444-assignment-02.csv", 700000)
 
-    write_dumpy(x, 'xinput')
+    write_dumpy(timstmp, 'datas')
 
