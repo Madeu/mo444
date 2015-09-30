@@ -71,20 +71,19 @@ def get_prob(dict):
     return new_dict
 
 
-def construct_data():
+def construct_data(lim):
     days = ['Monday', 'Tuesday', 'Friday', 'Wednesday', 'Thursday', 'Sunday', 'Saturday']
     crimes = load_dumpy('crimes')
     words = load_dumpy('words')
 
-    x = []
-    y = []
+    xinput = [[] for i in range(len(crimes))]
 
     f = open("../2015s2-mo444-assignment-02.csv")
     reader = csv.reader(f, delimiter=',', quotechar='"')
     reader.next()
 
+    count = 0
     for row in reader:
-        y.append(crimes.index(row[1]))
         x_line = []
         d = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S')
         x_line.append(days.index(row[3]) + (d.hour + float(d.minute)/60 + float(d.second)/3600)/24)
@@ -103,16 +102,18 @@ def construct_data():
         x_line.append(float(row[7]))
         x_line.append(float(row[8]))
         x_line += a
-        x.append(x_line)
+        xinput[crimes.index(row[1])].append(x_line)
+        count += 1
+        if count == lim:
+            break
 
     f.close()
 
-    return np.array(x), np.array(y)
+    return xinput
 
 
 if __name__ == "__main__":
-    x, y = construct_data()
+    x = construct_data(700000)
 
-    write_dumpy(y, 'input_y')
-    write_dumpy(x, 'input_x')
+    write_dumpy(x, 'xinput')
 
