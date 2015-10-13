@@ -113,11 +113,25 @@ def eletion_ovo(list_clsf, X, size):
     mat = [[0 for i in range(size)] for i in range(size)]
     res = []
 
-    for it, tx, clf in list_clsf:
-        mat[it[0]][it[1]] = clf.prob(X)[0]
-        mat[it[1]][it[0]] = clf.prob(X)[1]
+    for a,b,c in list_clsf:
+        p = c.predict_proba(X)
+        mat[a[0]][a[1]] = p[0][0]
+        mat[a[1]][a[0]] = p[0][1]
 
     for it in mat:
         res.append(sum(it)/(len(it)-1))
 
-    return max(res)
+    return res.index(max(res))
+
+
+def get_accur(list_clsf, X, Y, crimes):
+
+    ok = 0
+    for i in range(len(X)):
+        print i
+        res = eletion_ovo(list_clsf, X[i], len(crimes))
+        if res == crimes.index(Y[i]):
+            ok += 1
+            print 'ok'
+
+    return ok

@@ -57,6 +57,7 @@ docs/_build/
 target/
 
 #pickle
+readdata/*.p
 *.p
 
 #csv
